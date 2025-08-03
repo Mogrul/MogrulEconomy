@@ -23,16 +23,33 @@ public class ConfigBuilder {
     }
 
     public static class CommonConfig {
+        // General configurations.
         public final ForgeConfigSpec.ConfigValue<String> currencyName;
+        public final ForgeConfigSpec.ConfigValue<String> currencyCommandName;
         public final ForgeConfigSpec.ConfigValue<String> currencySymbol;
         public final ForgeConfigSpec.ConfigValue<Integer> startingCurrency;
 
+        // Mob rewards configurations.
+        public final ForgeConfigSpec.ConfigValue<Boolean> mobRewardsEnabled;
+        public final ForgeConfigSpec.ConfigValue<String> mobRewardsCommandName;
+
         public CommonConfig(ForgeConfigSpec.Builder builder) {
-            builder.push("general");
+            // General configurations.
+            builder.push("General");
 
             currencyName = builder.comment("Name of the currency.").define("currencyName", "Pounds");
+            currencyCommandName = builder.comment("Command used to interact with the mod. (lowercase, no spaces)").define("currencyCommandName", "mogrulcurrency");
             currencySymbol = builder.comment("Symbol of the currency.").define("currencySymbol", "£");
             startingCurrency = builder.comment("Starting currency for players.").defineInRange("startingCurrency", 500, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+
+            // Mob rewards configurations.
+            builder.push("MobRewards");
+
+            mobRewardsEnabled = builder.comment("Enable/Disable mob rewards.").define("mobRewardsEnabled", true);
+            mobRewardsCommandName = builder.comment("Command used to interact with the mob rewards component. (lowercase, no spaces)")
+                    .define("mobRewardsCommandName", "mobrewards");
 
             builder.pop();
         }
@@ -62,8 +79,14 @@ public class ConfigBuilder {
     }
 
     private static void setConfigs() {
+        // General configurations.
         Config.currencyName = COMMON.currencyName.get();
+        Config.currencyCommandName = COMMON.currencyCommandName.get();
         Config.currencySymbol = COMMON.currencySymbol.get();
         Config.startingCurrency = COMMON.startingCurrency.get();
+
+        // Mob rewards configurations.
+        Config.mobRewardsEnabled = COMMON.mobRewardsEnabled.get();
+        Config.mobRewardsCommandName = COMMON.mobRewardsCommandName.get();
     }
 }
