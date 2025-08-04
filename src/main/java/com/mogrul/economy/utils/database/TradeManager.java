@@ -31,7 +31,7 @@ public class TradeManager {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-            LOGGER.error("[{}] Failed to add a trade: {}", sql, e.getMessage());
+            LOGGER.error("[{}] Failed to add a trade: {}", MogrulEconomy.MODID, e.getMessage());
         }
 
         LOGGER.info("[{}] Adding trade [{}]", MogrulEconomy.MODID, trade.id());
@@ -46,9 +46,9 @@ public class TradeManager {
 
             stmt.executeUpdate();
 
-            LOGGER.info("[{}] Updated accepted trade: {}", sql, trade.id());
+            LOGGER.info("[{}] Updated accepted trade: {}", MogrulEconomy.MODID, trade.id());
         } catch (SQLException e) {
-            LOGGER.error("[{}] Failed to update accepted trade: {}", sql, e.getMessage());
+            LOGGER.error("[{}] Failed to update accepted trade: {}", MogrulEconomy.MODID, e.getMessage());
         }
 
         LOGGER.info("[{}] Updating trade [{}] to accepted.", MogrulEconomy.MODID, trade.id());
