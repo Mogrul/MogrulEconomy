@@ -24,13 +24,26 @@ public class BountyCommands {
                 Commands.literal("bounty")
                 .requires(source -> source.hasPermission(0))
 
-                // Member command: /bounty <player> <amount>
-                .then(Commands.argument("target", EntityArgument.player())
-                        .then(Commands.argument("price", IntegerArgumentType.integer(1))
-                                .executes(context -> addBounty(
+                // Member command: /bounty set <player> <amount>
+                .then(Commands.literal("set")
+                        .then(Commands.argument("target", EntityArgument.player())  // Argument for player target
+                                .then(Commands.argument("price", IntegerArgumentType.integer(1))  // Argument for price
+                                        .executes(context -> addBounty(
+                                                context.getSource(),
+                                                EntityArgument.getPlayer(context, "target"),
+                                                IntegerArgumentType.getInteger(context, "price")
+                                        ))
+                                )
+                        )
+                )
+
+                // OP command: /bounty remove <player>
+                .then(Commands.literal("remove")
+                        .requires(source -> source.hasPermission(4))
+                        .then(Commands.argument("target", EntityArgument.player())
+                                .executes(context -> removeBounty(
                                         context.getSource(),
-                                        EntityArgument.getPlayer(context, "target"),
-                                        IntegerArgumentType.getInteger(context, "price")
+                                        EntityArgument.getPlayer(context, "target")
                                 ))
                         )
                 )
@@ -63,6 +76,22 @@ public class BountyCommands {
 
         source.sendSuccess(() -> Component.literal( Config.currencySymbol + String.format("%,d", price) + " bounty added to " + target.getName().getString()), true);
         target.sendSystemMessage(Component.literal("Your bounty has increased to " + Config.currencySymbol + String.format("%,d", currentBounty) + "!"));
+
+        return 1;
+    }
+
+    public static int removeBounty(CommandSourceStack source, ServerPlayer target) {
+        int currentBounty = BountyManager.getBounty(target);
+
+        if (currentBounty <= 0) {
+            source.sendFailure(Component.literal(target.getName().getString() + "has no bounty to be removed!"));
+            return 0;
+        }
+
+        BountyManager.removeBounty(target);
+
+        source.sendSuccess(() -> Component.literal("Removed " + target.getName().getString() + " bounty of " + Config.currencySymbol + String.format("%,d", currentBounty)), true);
+        target.sendSystemMessage(Component.literal("Your bounty of " + Config.currencySymbol + String.format("%,d", currentBounty) + " has been removed!"));
 
         return 1;
     }

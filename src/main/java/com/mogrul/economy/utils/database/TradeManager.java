@@ -1,5 +1,6 @@
 package com.mogrul.economy.utils.database;
 
+import com.mogrul.economy.MogrulEconomy;
 import com.mogrul.economy.commands.TradeCommands;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -32,6 +33,8 @@ public class TradeManager {
         } catch (SQLException e) {
             LOGGER.error("[{}] Failed to add a trade: {}", sql, e.getMessage());
         }
+
+        LOGGER.info("[{}] Adding trade [{}]", MogrulEconomy.MODID, trade.id());
     }
 
     public static void updateTradeAccepted(TradeCommands.PendingTrade trade) {
@@ -47,5 +50,7 @@ public class TradeManager {
         } catch (SQLException e) {
             LOGGER.error("[{}] Failed to update accepted trade: {}", sql, e.getMessage());
         }
+
+        LOGGER.info("[{}] Updating trade [{}] to accepted.", MogrulEconomy.MODID, trade.id());
     }
 }

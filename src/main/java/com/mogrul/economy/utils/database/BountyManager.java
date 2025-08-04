@@ -20,7 +20,7 @@ public class BountyManager {
         String sql = "INSERT INTO bounties (uuid, price) " +
                 "VALUES (?, ?) " +
                 "ON CONFLICT (uuid) " +
-                "DO UPDATE SET price = excluded.price;";
+                "DO UPDATE SET price = bounties.price + excluded.price;";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, uuid);
@@ -30,6 +30,8 @@ public class BountyManager {
         } catch (SQLException e) {
             LOGGER.error("[{}] Failed to add bounty to {}: {}", MogrulEconomy.MODID, uuid, e.getMessage());
         }
+
+        LOGGER.info("[{}] Increased [{}] bounty by {}", MogrulEconomy.MODID, uuid, price);
     }
 
     public static int getBounty(ServerPlayer player) {
@@ -62,5 +64,7 @@ public class BountyManager {
         } catch (SQLException e) {
             LOGGER.error("[{}] Failed to remove bounty of {}: {}", MogrulEconomy.MODID, uuid, e.getMessage());
         }
+
+        LOGGER.info("[{}] Removed bounty: {}", MogrulEconomy.MODID, uuid);
     }
 }
