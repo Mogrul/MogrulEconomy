@@ -1,7 +1,6 @@
 package com.mogrul.economy.utils.database;
 
 import com.mogrul.economy.MogrulEconomy;
-import com.mogrul.economy.utils.Config;
 import com.mojang.logging.LogUtils;
 import net.minecraft.server.level.ServerPlayer;
 import org.slf4j.Logger;
