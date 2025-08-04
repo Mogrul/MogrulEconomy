@@ -100,6 +100,7 @@ public class BountyCommands {
         int victimBounty = BountyManager.getBounty(victimPlayer);
         BountyManager.removeBounty(victimPlayer);
 
+
         killerPlayer.sendSystemMessage(Component.literal("You claimed a bounty of " + Config.currencySymbol + String.format("%,d", victimBounty) + " for killing " + victimPlayer.getName().getString()));
         victimPlayer.sendSystemMessage(Component.literal("Your bounty of " + Config.currencySymbol + String.format("%,d", victimBounty) + " was claimed by " + killerPlayer.getName().getString()));
     }

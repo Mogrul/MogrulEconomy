@@ -263,7 +263,7 @@ public class TradeCommands {
                 .append(Component.literal(Config.currencySymbol + String.format("%,d", trade.price()))
                         .withStyle(Style.EMPTY.withColor(TextColor.parseColor("#FFDA00")).withBold(false)));
 
-        Component sellerMessage = Component.literal(trade.fromPlayer().getDisplayName().getString())
+        Component sellerMessage = Component.literal(trade.toPlayer().getDisplayName().getString())
                 .withStyle(Style.EMPTY.withColor(TextColor.parseColor("#FB7100")).withBold(true))
                 .append(Component.literal(" accepted your trade of ")
                         .withStyle(Style.EMPTY.withColor(TextColor.parseColor("#FFFFFF")).withBold(false)))
@@ -310,9 +310,18 @@ public class TradeCommands {
         ServerPlayer toPlayer = source.getPlayer();
         PendingTrade trade = pendingTrades.remove(tradeId);
 
-        if (checkTradeAuth(source, toPlayer, trade)) return 0;
+        if (trade == null) {
+            source.sendFailure(Component.literal("Trade no longer exists!"));
+            return 0;
+        }
 
-        assert trade != null;
+        assert toPlayer != null;
+        if (!trade.fromPlayer().getUUID().equals(toPlayer.getUUID())) {
+            source.sendFailure(Component.literal("This trade was not sent to you!"));
+
+            return 0;
+        }
+
         if (System.currentTimeMillis() > trade.expiresAt()) {
             source.sendFailure(Component.literal("Trade expired!"));
             return 0;
