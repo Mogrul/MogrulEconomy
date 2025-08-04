@@ -117,8 +117,10 @@ public class ConfigBuilder {
 
         // Trade configurations.
         Config.tradeEnabled = COMMON.tradeEnabled.get();
+        Config.tradeCommandName = COMMON.tradeCommandName.get();
 
         // Bounty configurations.
         Config.bountyEnabled = COMMON.bountyEnabled.get();
+        Config.bountyCommandName = COMMON.bountyCommandName.get();
     }
 }
