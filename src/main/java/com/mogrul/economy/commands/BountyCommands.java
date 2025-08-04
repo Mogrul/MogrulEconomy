@@ -56,12 +56,22 @@ public class BountyCommands {
             return 0;
         }
 
+        CurrencyManager.removeCurrency(sender, price);
+
         BountyManager.addBounty(target, price);
         int currentBounty = BountyManager.getBounty(target);
 
         source.sendSuccess(() -> Component.literal( Config.currencySymbol + String.format("%,d", price) + " bounty added to " + target.getName().getString()), true);
-        target.sendSystemMessage(Component.literal("Your bounty has increased to " + Config.currencySymbol + String.format("%,d", currentBounty) + "!"), true);
+        target.sendSystemMessage(Component.literal("Your bounty has increased to " + Config.currencySymbol + String.format("%,d", currentBounty) + "!"));
 
         return 1;
+    }
+
+    public static void onBountyComplete(ServerPlayer killerPlayer, ServerPlayer victimPlayer) {
+        int victimBounty = BountyManager.getBounty(victimPlayer);
+        BountyManager.removeBounty(victimPlayer);
+
+        killerPlayer.sendSystemMessage(Component.literal("You claimed a bounty of " + Config.currencySymbol + String.format("%,d", victimBounty) + " for killing " + victimPlayer.getName().getString()));
+        victimPlayer.sendSystemMessage(Component.literal("Your bounty of " + Config.currencySymbol + String.format("%,d", victimBounty) + " was claimed by " + killerPlayer.getName().getString()));
     }
 }

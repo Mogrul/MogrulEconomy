@@ -50,4 +50,17 @@ public class BountyManager {
 
         return 0;
     }
+
+    public static void removeBounty(ServerPlayer player) {
+        String uuid = player.getStringUUID();
+        String sql = "DELETE FROM bounties WHERE uuid = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, uuid);
+
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("[{}] Failed to remove bounty of {}: {}", MogrulEconomy.MODID, uuid, e.getMessage());
+        }
+    }
 }

@@ -1,8 +1,10 @@
 package com.mogrul.economy;
 
+import com.mogrul.economy.commands.BountyCommands;
 import com.mogrul.economy.commands.TradeCommands;
 import com.mogrul.economy.utils.Config;
 import com.mogrul.economy.utils.ConfigBuilder;
+import com.mogrul.economy.utils.database.BountyManager;
 import com.mogrul.economy.utils.database.CurrencyManager;
 import com.mogrul.economy.utils.database.DatabaseManager;
 import com.mogrul.economy.utils.database.MobRewardsManager;
@@ -62,6 +64,12 @@ public class MogrulEconomy
         Entity directEntity = source.getEntity();
 
         if (!(directEntity instanceof ServerPlayer player)) return;
+
+        if (victim instanceof ServerPlayer victimPlayer) {
+            if (BountyManager.getBounty(victimPlayer) > 0) {
+                BountyCommands.onBountyComplete(player, victimPlayer);
+            }
+        }
 
         ResourceLocation mobId = ForgeRegistries.ENTITY_TYPES.getKey(victim.getType());
         if (mobId == null) return;
