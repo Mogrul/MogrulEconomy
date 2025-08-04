@@ -10,4 +10,7 @@ public class Config {
     // Mob rewards configurations.
     public static Boolean mobRewardsEnabled;
     public static String mobRewardsCommandName;
+
+    // Trade configurations.
+    public static Boolean tradeEnabled;
 }

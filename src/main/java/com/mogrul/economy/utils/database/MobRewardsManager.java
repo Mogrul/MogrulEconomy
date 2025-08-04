@@ -13,6 +13,27 @@ import static com.mogrul.economy.utils.database.DatabaseManager.connection;
 public class MobRewardsManager {
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    public static int getReward(String mobId) {
+        String sql = "SELECT amount FROM mobrewards WHERE mob_id = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, mobId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("amount");
+            } else {
+                return 0;
+            }
+
+        } catch (SQLException e) {
+            LOGGER.error("[{}] Failed to get reward for mob {}: {}", MogrulEconomy.MODID, mobId, e.getMessage());
+
+            return 0;
+        }
+    }
+
     public static void setReward(String mobId, int amount) {
         String sql = "INSERT INTO mobrewards (mob_id, amount) " +
                 "VALUES (?, ?) " +

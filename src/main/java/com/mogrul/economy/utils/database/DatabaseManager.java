@@ -53,9 +53,29 @@ public class DatabaseManager {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
 
-            LOGGER.info("[{}] Created Default tables for mobRewards", MogrulEconomy.MODID);
+            LOGGER.info("[{}] Created default tables for mobRewards", MogrulEconomy.MODID);
         } catch (SQLException e) {
             LOGGER.info("[{}] Failed to create Default tables for mobRewards", e.getMessage());
+        }
+
+        // Trade table.
+        sql = "CREATE TABLE IF NOT EXISTS trade (" +
+                "id TEXT PRIMARY KEY, " +
+                "from_player TEXT NOT NULL, " +
+                "to_player TEXT NOT NULL, " +
+                "item TEXT NOT NULL, " +
+                "count INTEGER NOT NULL, " +
+                "price INTEGER NOT NULL, " +
+                "date INTEGER NOT NULL, " +
+                "accepted INTEGER NOT NULL DEFAULT 0" +
+                ");";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+
+            LOGGER.info("[{}] Created default tables for trade.", MogrulEconomy.MODID);
+        } catch (SQLException e) {
+            LOGGER.info("[{}] Failed to create default tables for trade.", e.getMessage());
         }
     }
 

@@ -3,6 +3,7 @@ package com.mogrul.economy.utils;
 import com.mogrul.economy.MogrulEconomy;
 import com.mogrul.economy.commands.CurrencyCommands;
 import com.mogrul.economy.commands.MobRewardsCommands;
+import com.mogrul.economy.commands.TradeCommands;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -18,9 +19,19 @@ public class CommandBuilder {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-        LOGGER.info("[{}] Registering commands...",  MogrulEconomy.MODID);
 
         CurrencyCommands.registerCommand(dispatcher);
-        MobRewardsCommands.registerCommand(dispatcher);
+
+        if (Boolean.TRUE.equals(Config.tradeEnabled)) {
+            TradeCommands.registerCommand(dispatcher);
+        } else {
+            LOGGER.info("[{}] Trade component disabled, skipping trade command registration.", MogrulEconomy.MODID);
+        }
+
+        if (Boolean.TRUE.equals(Config.mobRewardsEnabled)) {
+            MobRewardsCommands.registerCommand(dispatcher);
+        } else {
+            LOGGER.info("[{}] Mob Rewards component disabled, skipping mob rewards command registration.", MogrulEconomy.MODID);
+        }
     }
 }

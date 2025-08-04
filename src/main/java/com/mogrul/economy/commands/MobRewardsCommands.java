@@ -1,5 +1,6 @@
 package com.mogrul.economy.commands;
 
+import com.mogrul.economy.MogrulEconomy;
 import com.mogrul.economy.utils.Config;
 import com.mogrul.economy.utils.database.MobRewardsManager;
 import com.mojang.brigadier.CommandDispatcher;
@@ -24,6 +25,8 @@ public class MobRewardsCommands {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static void registerCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LOGGER.info("[{}] Registering mobRewards commands...", MogrulEconomy.MODID);
+
         dispatcher.register(
                 Commands.literal(Config.mobRewardsCommandName)
                         .requires(source -> source.hasPermission(4))

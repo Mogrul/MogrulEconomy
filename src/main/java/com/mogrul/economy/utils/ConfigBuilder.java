@@ -23,7 +23,7 @@ public class ConfigBuilder {
     }
 
     public static class CommonConfig {
-        // General configurations.
+        // Currency configurations.
         public final ForgeConfigSpec.ConfigValue<String> currencyName;
         public final ForgeConfigSpec.ConfigValue<String> currencyCommandName;
         public final ForgeConfigSpec.ConfigValue<String> currencySymbol;
@@ -33,9 +33,12 @@ public class ConfigBuilder {
         public final ForgeConfigSpec.ConfigValue<Boolean> mobRewardsEnabled;
         public final ForgeConfigSpec.ConfigValue<String> mobRewardsCommandName;
 
+        // Trade configurations.
+        public final ForgeConfigSpec.ConfigValue<Boolean> tradeEnabled;
+
         public CommonConfig(ForgeConfigSpec.Builder builder) {
-            // General configurations.
-            builder.push("General");
+            // Currency configurations.
+            builder.push("Currency");
 
             currencyName = builder.comment("Name of the currency.").define("currencyName", "Pounds");
             currencyCommandName = builder.comment("Command used to interact with the mod. (lowercase, no spaces)").define("currencyCommandName", "mogrulcurrency");
@@ -50,6 +53,13 @@ public class ConfigBuilder {
             mobRewardsEnabled = builder.comment("Enable/Disable mob rewards.").define("mobRewardsEnabled", true);
             mobRewardsCommandName = builder.comment("Command used to interact with the mob rewards component. (lowercase, no spaces)")
                     .define("mobRewardsCommandName", "mobrewards");
+
+            builder.pop();
+
+            // Trade configurations.
+            builder.push("Trade");
+
+            tradeEnabled = builder.comment("Enable/Disable trading system.").define("tradeEnabled", true);
 
             builder.pop();
         }
@@ -88,5 +98,8 @@ public class ConfigBuilder {
         // Mob rewards configurations.
         Config.mobRewardsEnabled = COMMON.mobRewardsEnabled.get();
         Config.mobRewardsCommandName = COMMON.mobRewardsCommandName.get();
+
+        // Trade configurations.
+        Config.tradeEnabled = COMMON.tradeEnabled.get();
     }
 }
