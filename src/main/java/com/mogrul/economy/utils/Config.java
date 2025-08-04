@@ -13,7 +13,9 @@ public class Config {
 
     // Trade configurations.
     public static Boolean tradeEnabled;
+    public static String tradeCommandName;
 
     // Bounty configurations.
     public static Boolean bountyEnabled;
+    public static String bountyCommandName;
 }

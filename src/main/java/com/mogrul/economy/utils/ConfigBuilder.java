@@ -35,9 +35,11 @@ public class ConfigBuilder {
 
         // Trade configurations.
         public final ForgeConfigSpec.ConfigValue<Boolean> tradeEnabled;
+        public final ForgeConfigSpec.ConfigValue<String> tradeCommandName;
 
         // Bounty configurations.
         public final ForgeConfigSpec.ConfigValue<Boolean> bountyEnabled;
+        public final ForgeConfigSpec.ConfigValue<String> bountyCommandName;
 
         public CommonConfig(ForgeConfigSpec.Builder builder) {
             // Currency configurations.
@@ -63,6 +65,8 @@ public class ConfigBuilder {
             builder.push("Trade");
 
             tradeEnabled = builder.comment("Enable/Disable trading system.").define("tradeEnabled", true);
+            tradeCommandName = builder.comment("Command used to interact with the trade component. (lowercase, no spaces)")
+                    .define("tradeCommandName", "trade");
 
             builder.pop();
 
@@ -70,6 +74,8 @@ public class ConfigBuilder {
             builder.push("Bounty");
 
             bountyEnabled = builder.comment("Enable/Disable bounty system.").define("bountyEnabled", true);
+            bountyCommandName = builder.comment("Command used to interact with the bounty component. (lowercase, no spaces)")
+                    .define("bountyCommandName", "bounty");
 
             builder.pop();
         }

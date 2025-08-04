@@ -38,7 +38,7 @@ public class TradeCommands {
         LOGGER.info("[{}] Registering trade commands...", MogrulEconomy.MODID);
 
         dispatcher.register(
-                Commands.literal("trade")
+                Commands.literal(Config.tradeCommandName)
                         .requires(source -> source.hasPermission(0))
 
                         // Member command: /trade <amount> <player> - Sends a trade request from the item in their hand to a player.

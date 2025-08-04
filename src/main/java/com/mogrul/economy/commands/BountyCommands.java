@@ -21,7 +21,7 @@ public class BountyCommands {
         LOGGER.info("[{}] Registering bounty commands...", MogrulEconomy.MODID);
 
         dispatcher.register(
-                Commands.literal("bounty")
+                Commands.literal(Config.bountyCommandName)
                 .requires(source -> source.hasPermission(0))
 
                 // Member command: /bounty set <player> <amount>
