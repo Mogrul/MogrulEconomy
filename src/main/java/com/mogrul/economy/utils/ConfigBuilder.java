@@ -36,12 +36,15 @@ public class ConfigBuilder {
         // Trade configurations.
         public final ForgeConfigSpec.ConfigValue<Boolean> tradeEnabled;
 
+        // Bounty configurations.
+        public final ForgeConfigSpec.ConfigValue<Boolean> bountyEnabled;
+
         public CommonConfig(ForgeConfigSpec.Builder builder) {
             // Currency configurations.
             builder.push("Currency");
 
             currencyName = builder.comment("Name of the currency.").define("currencyName", "Pounds");
-            currencyCommandName = builder.comment("Command used to interact with the mod. (lowercase, no spaces)").define("currencyCommandName", "mogrulcurrency");
+            currencyCommandName = builder.comment("Command used to interact with the mod. (lowercase, no spaces)").define("currencyCommandName", "currency");
             currencySymbol = builder.comment("Symbol of the currency.").define("currencySymbol", "£");
             startingCurrency = builder.comment("Starting currency for players.").defineInRange("startingCurrency", 500, 0, Integer.MAX_VALUE);
 
@@ -60,6 +63,13 @@ public class ConfigBuilder {
             builder.push("Trade");
 
             tradeEnabled = builder.comment("Enable/Disable trading system.").define("tradeEnabled", true);
+
+            builder.pop();
+
+            // Bounty configurations.
+            builder.push("Bounty");
+
+            bountyEnabled = builder.comment("Enable/Disable bounty system.").define("bountyEnabled", true);
 
             builder.pop();
         }
@@ -101,5 +111,8 @@ public class ConfigBuilder {
 
         // Trade configurations.
         Config.tradeEnabled = COMMON.tradeEnabled.get();
+
+        // Bounty configurations.
+        Config.bountyEnabled = COMMON.bountyEnabled.get();
     }
 }

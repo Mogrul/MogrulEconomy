@@ -30,7 +30,7 @@ public class CurrencyManager {
                 return rs.getInt("amount");
             }
         } catch (SQLException e) {
-            LOGGER.error("Failed to get {}'s for player [{}]: {}", uuid, Config.currencyName, e.getMessage());
+            LOGGER.error("[{}] Failed to get {}'s for player [{}]: {}", MogrulEconomy.MODID, uuid, Config.currencyName, e.getMessage());
         }
 
         return 0;

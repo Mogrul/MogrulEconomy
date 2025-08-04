@@ -85,7 +85,7 @@ public class CurrencyCommands {
         }
 
         int amount = CurrencyManager.getCurrency(player);
-        source.sendSuccess(() -> Component.literal("You have " + Config.currencySymbol + amount), false);
+        source.sendSuccess(() -> Component.literal("You have " + Config.currencySymbol + String.format("%,d", amount)), false);
         return 1;
     }
 
@@ -101,7 +101,7 @@ public class CurrencyCommands {
         }
 
         int amount = CurrencyManager.getCurrency(target);
-        source.sendSuccess(() -> Component.literal(target.getName().getString() + " has " + Config.currencySymbol + amount), false);
+        source.sendSuccess(() -> Component.literal(target.getName().getString() + " has " + Config.currencySymbol + String.format("%,d", amount)), false);
         return 1;
     }
 
@@ -126,8 +126,8 @@ public class CurrencyCommands {
         CurrencyManager.removeCurrency(sender, amount);
         CurrencyManager.addCurrency(target, amount);
 
-        sender.sendSystemMessage(Component.literal("You sent " + Config.currencySymbol + amount + " to " + target.getName().getString()));
-        target.sendSystemMessage(Component.literal("You received " + Config.currencySymbol + amount + " from " + sender.getName().getString()));
+        sender.sendSystemMessage(Component.literal("You sent " + Config.currencySymbol + String.format("%,d", amount) + " to " + target.getName().getString()));
+        target.sendSystemMessage(Component.literal("You received " + Config.currencySymbol + String.format("%,d", amount) + " from " + sender.getName().getString()));
 
         return 1;
     }
@@ -141,8 +141,8 @@ public class CurrencyCommands {
 
         CurrencyManager.removeCurrency(target, amount);
 
-        sender.sendSystemMessage(Component.literal("Removed " + Config.currencySymbol + amount + " from " + target.getName().getString()), false);
-        target.sendSystemMessage(Component.literal(sender.getName().getString() + " removed " + Config.currencySymbol + amount + " from you!"), false);
+        sender.sendSystemMessage(Component.literal("Removed " + Config.currencySymbol + String.format("%,d", amount) + " from " + target.getName().getString()), false);
+        target.sendSystemMessage(Component.literal(sender.getName().getString() + " removed " + Config.currencySymbol + String.format("%,d", amount) + " from you!"), false);
 
         return 1;
     }
@@ -156,8 +156,8 @@ public class CurrencyCommands {
 
         CurrencyManager.setCurrency(target, amount);
 
-        sender.sendSystemMessage(Component.literal("Set " + target.getName().getString() + "'s " + Config.currencyName + " to " + Config.currencySymbol + amount ), false);
-        target.sendSystemMessage(Component.literal(sender.getName().getString() + " set your " + Config.currencyName + " to " + Config.currencySymbol + amount), false);
+        sender.sendSystemMessage(Component.literal("Set " + target.getName().getString() + "'s " + Config.currencyName + " to " + Config.currencySymbol + String.format("%,d", amount) ), false);
+        target.sendSystemMessage(Component.literal(sender.getName().getString() + " set your " + Config.currencyName + " to " + Config.currencySymbol + String.format("%,d", amount)), false);
 
         return 1;
     }

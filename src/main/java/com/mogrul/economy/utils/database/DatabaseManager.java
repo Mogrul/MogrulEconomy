@@ -77,6 +77,20 @@ public class DatabaseManager {
         } catch (SQLException e) {
             LOGGER.info("[{}] Failed to create default tables for trade.", e.getMessage());
         }
+
+        // Bounties table.
+        sql = "CREATE TABLE IF NOT EXISTS bounties (" +
+                "uuid TEXT PRIMARY KEY NOT NULL, " +
+                "price INTEGER NOT NULL DEFAULT 0 " +
+                ");";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+
+            LOGGER.info("[{}] Created default tables for bounties.", MogrulEconomy.MODID);
+        } catch (SQLException e) {
+            LOGGER.info("[{}] Failed to create Default tables for bounties.", e.getMessage());
+        }
     }
 
     public static void close() {

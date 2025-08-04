@@ -79,7 +79,7 @@ public class MobRewardsCommands {
         LOGGER.info("Setting mob reward for '{}' to {}", mobId, amount);
         MobRewardsManager.setReward(mobId.toString(), amount);
 
-        source.sendSuccess(() -> Component.literal("Set reward for " + mobId + " to " + amount), true);
+        source.sendSuccess(() -> Component.literal("Set reward for " + mobId + " to " + String.format("%,d", amount)), true);
 
         return 1;
     }

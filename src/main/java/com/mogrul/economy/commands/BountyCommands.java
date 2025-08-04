@@ -1,0 +1,67 @@
+package com.mogrul.economy.commands;
+
+import com.mogrul.economy.MogrulEconomy;
+import com.mogrul.economy.utils.Config;
+import com.mogrul.economy.utils.database.BountyManager;
+import com.mogrul.economy.utils.database.CurrencyManager;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.logging.LogUtils;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import org.slf4j.Logger;
+
+public class BountyCommands {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
+    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+        LOGGER.info("[{}] Registering bounty commands...", MogrulEconomy.MODID);
+
+        dispatcher.register(
+                Commands.literal("bounty")
+                .requires(source -> source.hasPermission(0))
+
+                // Member command: /bounty <player> <amount>
+                .then(Commands.argument("target", EntityArgument.player())
+                        .then(Commands.argument("price", IntegerArgumentType.integer(1))
+                                .executes(context -> addBounty(
+                                        context.getSource(),
+                                        EntityArgument.getPlayer(context, "target"),
+                                        IntegerArgumentType.getInteger(context, "price")
+                                ))
+                        )
+                )
+        );
+    }
+
+    public static int addBounty(CommandSourceStack source, ServerPlayer target, Integer price) {
+        ServerPlayer sender = source.getPlayer();
+
+        assert sender != null;
+        if (!sender.getName().getString().equals("Dev")) {
+            if (sender.getStringUUID().equals(target.getStringUUID())) {
+                source.sendFailure(Component.literal("You can't put a bounty on yourself!"));
+
+                return 0;
+            }
+        }
+
+        int senderCurrency = CurrencyManager.getCurrency(sender);
+        if (price > senderCurrency) {
+            source.sendFailure(Component.literal("You have " + Config.currencySymbol + String.format("%,d", senderCurrency) + " - you can't afford a " + Config.currencySymbol + String.format("%,d", price) + " bounty!"));
+
+            return 0;
+        }
+
+        BountyManager.addBounty(target, price);
+        int currentBounty = BountyManager.getBounty(target);
+
+        source.sendSuccess(() -> Component.literal( Config.currencySymbol + String.format("%,d", price) + " bounty added to " + target.getName().getString()), true);
+        target.sendSystemMessage(Component.literal("Your bounty has increased to " + Config.currencySymbol + String.format("%,d", currentBounty) + "!"), true);
+
+        return 1;
+    }
+}

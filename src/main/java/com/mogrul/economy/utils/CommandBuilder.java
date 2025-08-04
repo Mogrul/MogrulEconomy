@@ -1,6 +1,7 @@
 package com.mogrul.economy.utils;
 
 import com.mogrul.economy.MogrulEconomy;
+import com.mogrul.economy.commands.BountyCommands;
 import com.mogrul.economy.commands.CurrencyCommands;
 import com.mogrul.economy.commands.MobRewardsCommands;
 import com.mogrul.economy.commands.TradeCommands;
@@ -32,6 +33,12 @@ public class CommandBuilder {
             MobRewardsCommands.registerCommand(dispatcher);
         } else {
             LOGGER.info("[{}] Mob Rewards component disabled, skipping mob rewards command registration.", MogrulEconomy.MODID);
+        }
+
+        if (Boolean.TRUE.equals(Config.bountyEnabled)) {
+            BountyCommands.registerCommands(dispatcher);
+        } else {
+            LOGGER.info("[{}] Bounty component disabled, skipping bounty command registration.", MogrulEconomy.MODID);
         }
     }
 }
