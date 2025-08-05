@@ -71,3 +71,7 @@ The configuration file of this mod can be found in your server's configuration f
 # Data Handling
 The data stored and accessed by this mod can be accessed from a sqlite database file in your server's configuration folder, named **"MogrulEconomy.db"**. Future updates will possibly include the addition of an external networked database for those using PostgreSQL, MySQL ect.
 
+# Requirements
+For the life of me I couldn't figure out how to add the JDBC library into a forge mod - so, a third-party mod which enables the library is required for the mod to function.
+[SQLite JDBC (Forge)](https://www.curseforge.com/minecraft/mc-mods/sqlite-jdbc)
+
