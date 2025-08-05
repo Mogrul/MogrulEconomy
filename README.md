@@ -18,6 +18,9 @@ A secondary component of the mod, allowing a player to initialise a trade with a
 ### Member commands (Level 0):
 - **/trade <amount> _<target> <price>_** - Initialise a trade with a player from a item held in hand.
 
+![Trade request sent example](https://github.com/Mogrul/MogrulEconomy/blob/main/images/trade_sent_example.png?raw=true)
+![trade request example](https://github.com/Mogrul/MogrulEconomy/blob/main/images/trade_request_example.png?raw=true)
+
 ## Mob rewards component:
 A secondary component of the mod, allowing player's to receive a reward for killing a mob - OP's can set a reward for a mob and when a player kills that mob type the player is rewarded by a set amount.
 ### OP commands (Level 4):
