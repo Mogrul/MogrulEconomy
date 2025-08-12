@@ -17,9 +17,11 @@ public class MainDataHandler {
     private static final String MODPATH = "Economy";
     private static final String PLAYERSPATH = "Players";
     private static final String MOBFILEPATH = "mobs.json";
+    private static final String MOBPATH = "Mobs";
 
     public static Path playersFolder;
     public static Path mobsFile;
+    public static Path mobsFolder;
 
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
@@ -29,15 +31,16 @@ public class MainDataHandler {
         Path modPath = dataPath.resolve(MODPATH);
         Path playersPath = modPath.resolve(PLAYERSPATH);
         Path mobsFilePath = dataPath.resolve(MOBFILEPATH);
+        Path mobsPath = modPath.resolve(MOBPATH);
 
         playersFolder = playersPath;
         mobsFile = mobsFilePath;
+        mobsFolder = mobsPath;
 
         // Create mod path.
         try {
             if (!Files.exists(modPath)) {
                 Files.createDirectories(modPath);
-                LOGGER.info("[{}] Creating mod directory!", LOGNAME);
             }
         } catch (IOException e) {
             LOGGER.error("[{}] Failed to create mod directory! {}", LOGNAME, e.getMessage());
@@ -47,20 +50,18 @@ public class MainDataHandler {
         try {
             if (!Files.exists(playersPath)) {
                 Files.createDirectories(playersPath);
-                LOGGER.info("[{}] Creating player directory!", LOGNAME);
             }
         } catch (IOException e) {
             LOGGER.error("[{}] Failed to create player directory! {}", LOGNAME, e.getMessage());
         }
 
-        // Create mobs file.
+        // Create mobs path.
         try {
-            if (!Files.exists(mobsFile)) {
-                Files.createFile(mobsFile);
-                LOGGER.info("[{}] Creating mobs file!", LOGNAME);
+            if (!Files.exists(mobsPath)) {
+                Files.createDirectories(mobsPath);
             }
         } catch (IOException e) {
-            LOGGER.error("[{}] Failed to create mobs file! {}", LOGNAME, e.getMessage());
+            LOGGER.error("[{}] Failed to create mobs path! {}", LOGNAME, e.getMessage());
         }
     }
 }

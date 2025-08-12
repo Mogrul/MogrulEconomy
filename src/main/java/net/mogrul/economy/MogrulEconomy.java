@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -40,7 +39,7 @@ public class MogrulEconomy {
     public static final String LOGNAME = "MogrulEconomy";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public MogrulEconomy(IEventBus modEventBus, ModContainer modContainer) {
+    public MogrulEconomy(ModContainer modContainer) {
         NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
     }
@@ -73,8 +72,9 @@ public class MogrulEconomy {
         if (Config.mobRewardsEnabled) {
             ResourceLocation mobResource = EntityType.getKey(victimEntity.getType());
             String mobString = mobResource.toString();
+            String mobIDString = mobString.replace(":", "_");
 
-            MobRewardData mobRewardData = MemoryData.mobRewards.get(mobString);
+            MobRewardData mobRewardData = MemoryData.mobRewards.get(mobIDString);
             if (mobRewardData == null) return;
             PlayerData killerData = MemoryData.players.get(killerPlayer.getStringUUID());
             if (killerData == null) return;
@@ -113,8 +113,6 @@ public class MogrulEconomy {
 
         // Using an iterator to safely remove entries from the map
         Iterator<Map.Entry<String, PendingTradeData>> iterator = TradeCommands.pendingTrades.entrySet().iterator();
-
-        LOGGER.info(TradeCommands.pendingTrades.toString());
 
         while (iterator.hasNext()) {
             Map.Entry<String, PendingTradeData> entry = iterator.next();

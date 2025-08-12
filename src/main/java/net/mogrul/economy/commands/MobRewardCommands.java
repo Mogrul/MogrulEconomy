@@ -18,7 +18,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import static net.mogrul.economy.MogrulEconomy.*;
@@ -81,9 +80,13 @@ public class MobRewardCommands {
         }
 
         String mobString = mob.toString();
-        if (MemoryData.mobRewards.get(mobString) != null) {
-            MemoryData.mobRewards.get(mobString).rewardAmount = amount;
-            MobDataHandler.save(new ArrayList<>(MemoryData.mobRewards.values()));
+        String mobIDString = mobString.replace(":", "_");
+
+        // Update existing data.
+        if (MemoryData.mobRewards.get(mobIDString) != null) {
+            MobRewardData mobRewardData = MemoryData.mobRewards.get(mobIDString);
+            mobRewardData.rewardAmount = amount;
+            MobDataHandler.save(mobRewardData);
 
             Component mobUpdatedSuccessMessage = Component.literal("")
                     .append(Component.literal(mob.toString())
@@ -102,9 +105,10 @@ public class MobRewardCommands {
             return 1;
         }
 
+        // Create a new data piece.
         MobRewardData mobRewardData = new MobRewardData(mobString, amount);
-        MemoryData.mobRewards.put(mobString, mobRewardData);
-        MobDataHandler.save(new ArrayList<>(MemoryData.mobRewards.values()));
+        MemoryData.mobRewards.put(mobIDString, mobRewardData);
+        MobDataHandler.save(mobRewardData);
 
         Component rewardSetSuccessMessage = Component.literal("")
                 .append(Component.literal(mobString)
@@ -145,7 +149,9 @@ public class MobRewardCommands {
         }
 
         String mobString = mob.toString();
-        if (MemoryData.mobRewards.get(mobString) == null) {
+        String mobIDString = mobString.replace(":", "_");
+        MobRewardData mobRewardData = MemoryData.mobRewards.get(mobIDString);
+        if (mobRewardData == null) {
             Component mobNotExistFailMessage = Component.literal("")
                     .append(Component.literal(mob.toString())
                             .withStyle(hexToTextColorStyle(Colours.mobName)
@@ -155,10 +161,11 @@ public class MobRewardCommands {
                     .append(Component.literal(" doesn't have a set reward!"));
 
             source.sendFailure(mobNotExistFailMessage);
+            return 0;
         }
 
-        MemoryData.mobRewards.remove(mobString);
-        MobDataHandler.save(new ArrayList<>(MemoryData.mobRewards.values()));
+        MemoryData.mobRewards.remove(mobIDString);
+        MobDataHandler.remove(mobRewardData);
 
         Component successMessage = Component.literal("")
                 .append(Component.literal(mob.toString())
