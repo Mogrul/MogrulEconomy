@@ -4,16 +4,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 public class PendingTradeData {
-    public static String UUID;
-    public static ServerPlayer fromPlayer;
-    public static ServerPlayer toPlayer;
-    public static ItemStack items;
-    public static int count;
-    public static int price;
-    public static long expiresAt;
+    public String UUID;
+    public ServerPlayer fromPlayer;
+    public ServerPlayer toPlayer;
+    public ItemStack items;
+    public int count;
+    public int price;
+    public long expiresAt;
 
     public PendingTradeData(
-            String id,
+            String UUID,
             ServerPlayer fromPlayer,
             ServerPlayer toPlayer,
             ItemStack items,
