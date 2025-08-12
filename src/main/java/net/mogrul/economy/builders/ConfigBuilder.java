@@ -26,6 +26,10 @@ public class ConfigBuilder {
     public static ModConfigSpec.BooleanValue tradeEnabled;
     public static ModConfigSpec.ConfigValue<String> tradeCommandName;
 
+    // Shop values.
+    public static ModConfigSpec.BooleanValue shopsEnabled;
+    public static ModConfigSpec.ConfigValue<String> shopsCommandName;
+
     // The full config spec
     public static final ModConfigSpec COMMON_CONFIG;
     static {
@@ -51,7 +55,7 @@ public class ConfigBuilder {
 
         builder.pop();
 
-        builder.push("Mob Rewards");
+        builder.push("MobRewards");
 
         mobRewardsEnabled = builder
                 .comment("Whether the mob rewards component should be anabled.")
@@ -70,6 +74,17 @@ public class ConfigBuilder {
         tradeCommandName = builder
                 .comment("Command to use when using the trade component in-game.")
                 .define("tradeCommandName", "trade");
+
+        builder.pop();
+
+        builder.push("Shops");
+
+        shopsEnabled = builder
+                .comment("Whether the shop component should be enabled.")
+                .define("shopsEnabled", true);
+        shopsCommandName = builder
+                .comment("Command to use when using the shops component in-game.")
+                .define("shopsCommandName", "shops");
 
         COMMON_CONFIG = builder.build();
     }
@@ -109,5 +124,9 @@ public class ConfigBuilder {
         // Trade configs.
         Config.tradeEnabled = tradeEnabled.get();
         Config.tradeCommandName = tradeCommandName.get();
+
+        // Shop configs.
+        Config.shopsEnabled = shopsEnabled.get();
+        Config.shopsCommandName = shopsCommandName.get();
     }
 }

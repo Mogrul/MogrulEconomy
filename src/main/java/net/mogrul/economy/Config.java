@@ -15,4 +15,8 @@ public class Config {
     // Trade configs.
     public static Boolean tradeEnabled = true;
     public static String tradeCommandName = "trade";
+
+    // Shop configs.
+    public static Boolean shopsEnabled = true;
+    public static String shopsCommandName = "shops";
 }

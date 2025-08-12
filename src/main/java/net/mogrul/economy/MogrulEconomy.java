@@ -4,16 +4,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.mogrul.economy.commands.TradeCommands;
-import net.mogrul.economy.data.MemoryData;
-import net.mogrul.economy.data.MobRewardData;
-import net.mogrul.economy.data.PendingTradeData;
-import net.mogrul.economy.data.PlayerData;
+import net.mogrul.economy.data.*;
 import net.mogrul.economy.handlers.PlayerDataHandler;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -30,6 +30,7 @@ import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 
 import static net.mogrul.economy.builders.ConfigBuilder.COMMON_CONFIG;
 
@@ -39,6 +40,8 @@ public class MogrulEconomy {
     public static final String LOGNAME = "MogrulEconomy";
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    public static MinecraftServer server;
+
     public MogrulEconomy(ModContainer modContainer) {
         NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
@@ -46,7 +49,7 @@ public class MogrulEconomy {
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-
+        server = event.getServer();
     }
 
     public static Style hexToTextColorStyle(String hex) {
@@ -62,6 +65,8 @@ public class MogrulEconomy {
 
     @SubscribeEvent
     public void onEntityDeath(LivingDeathEvent event) {
+        if (!Config.mobRewardsEnabled) return;
+
         LivingEntity victimEntity = event.getEntity();
         DamageSource damageSource = event.getSource();
         Entity killerEntity = damageSource.getEntity();
@@ -109,6 +114,8 @@ public class MogrulEconomy {
 
     @SubscribeEvent
     public void onServerTick(ServerTickEvent.Post event) {
+        if (!Config.tradeEnabled) return;
+
         long now = System.currentTimeMillis();
 
         // Using an iterator to safely remove entries from the map
@@ -136,5 +143,18 @@ public class MogrulEconomy {
                 );
             }
         }
+    }
+
+    public static boolean canFitInPlayerInventory(Inventory inventory, ItemStack stack) {
+        for (int i = 0; i <= 35; i++) {
+            ItemStack slotStack = inventory.getItem(i);
+            if (slotStack.isEmpty()) {
+                return true;
+            }
+            if (ItemStack.isSameItemSameComponents(slotStack, stack) && slotStack.getCount() < slotStack.getMaxStackSize()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

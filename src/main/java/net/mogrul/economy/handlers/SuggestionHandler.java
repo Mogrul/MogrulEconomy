@@ -19,4 +19,12 @@ public class SuggestionHandler {
                     .collect(Collectors.toList()),
             builder
     );
+
+    public static final SuggestionProvider<CommandSourceStack> SUGGEST_ITEMS = (context, builder) -> SharedSuggestionProvider.suggest(
+            BuiltInRegistries.ITEM.stream()
+                    .map(BuiltInRegistries.ITEM::getKey)
+                    .map(ResourceLocation::toString)
+                    .toList(),
+            builder
+    );
 }

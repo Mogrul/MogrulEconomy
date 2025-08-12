@@ -260,6 +260,7 @@ public class TradeCommands {
             return 0;
         }
 
+        assert toPlayer != null;
         PlayerData toPlayerData = MemoryData.players.get(toPlayer.getStringUUID());
         if (toPlayerData == null) return 0;
         if (toPlayerData.currency < pendingTradeData.price) {
@@ -276,9 +277,13 @@ public class TradeCommands {
             return 0;
         }
 
-        if (!toPlayer.getInventory().add(pendingTradeData.items.copy())) {
-            toPlayer.drop(pendingTradeData.items.copy(), false);
+        ItemStack itemStackCopy = pendingTradeData.items.copy();
+        if (!canFitInPlayerInventory(toPlayer.getInventory(), itemStackCopy)) {
+            toPlayer.sendSystemMessage(Component.literal("Make some room in your inventory!"));
+            return 0;
         }
+
+        toPlayer.getInventory().add(itemStackCopy);
 
         toPlayerData.currency -= pendingTradeData.price;
         PlayerDataHandler.save(toPlayerData);
@@ -384,6 +389,7 @@ public class TradeCommands {
             return 0;
         }
 
+        assert toPlayer != null;
         if (!pendingTradeData.toPlayer.getUUID().equals(toPlayer.getUUID())) {
             source.sendFailure(Component.literal("This isn't your trade to cancel!"));
             return 0;
