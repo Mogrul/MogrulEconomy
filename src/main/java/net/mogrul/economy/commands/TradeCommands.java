@@ -381,7 +381,7 @@ public class TradeCommands {
     }
 
     private static int cancelTrade(CommandSourceStack source, String tradeUUID) {
-        ServerPlayer toPlayer = source.getPlayer();
+        ServerPlayer fromPlayer = source.getPlayer();
         PendingTradeData pendingTradeData = pendingTrades.remove(tradeUUID);
 
         if (pendingTradeData == null) {
@@ -389,8 +389,8 @@ public class TradeCommands {
             return 0;
         }
 
-        assert toPlayer != null;
-        if (!pendingTradeData.toPlayer.getUUID().equals(toPlayer.getUUID())) {
+        assert fromPlayer != null;
+        if (!pendingTradeData.fromPlayer.getUUID().equals(fromPlayer.getUUID())) {
             source.sendFailure(Component.literal("This isn't your trade to cancel!"));
             return 0;
         }

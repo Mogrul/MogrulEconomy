@@ -134,6 +134,31 @@ public class ShopVillager extends Villager {
             PlayerDataHandler.save(playerData);
             shopData.quantitySold += shopData.sellingAmount;
             ShopDataHandler.save(shopData);
+
+            Component successfulTransactrionMessage = Component.literal("[Shops]\n")
+                    .append(Component.literal("You've bought "))
+                    .append(Component.literal(shopData.sellingItemID + " x" + shopData.sellingAmount + "\n")
+                            .withStyle(ChatFormatting.GREEN)
+                    )
+                    .append(Component.literal(playerData.name)
+                            .withStyle(ChatFormatting.BLUE)
+                    )
+                    .append(Component.literal(Config.currencySymbol + shopData.sellingPrice )
+                            .withStyle(ChatFormatting.YELLOW)
+                    )
+                    .append(Component.literal(" -> "))
+                    .append(Component.literal(shopData.entityName + "\n")
+                            .withStyle(ChatFormatting.BLUE)
+                    )
+                    .append(Component.literal(playerData.name)
+                            .withStyle(ChatFormatting.GREEN)
+                    )
+                    .append(Component.literal(" = "))
+                    .append(Component.literal(Config.currencySymbol + playerData.currency)
+                            .withStyle(ChatFormatting.YELLOW)
+                    );
+
+            serverPlayer.sendSystemMessage(successfulTransactrionMessage);
         }
 
         return InteractionResult.FAIL;

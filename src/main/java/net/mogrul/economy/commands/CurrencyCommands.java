@@ -16,6 +16,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
+import java.util.Comparator;
+import java.util.List;
+
 import static net.mogrul.economy.MogrulEconomy.*;
 
 @EventBusSubscriber(modid = MODID)
@@ -38,6 +41,13 @@ public class CurrencyCommands {
                         .executes(context -> showCurrency(
                                 context.getSource()
                         ))
+
+                        // Member subcommand: /currency ranks - Show's top 10 players on the server.
+                        .then(Commands.literal("ranks")
+                                .executes(context -> showPlayerRanks(
+                                        context.getSource()
+                                ))
+                        )
 
                         // Member subcommand: /currency <target> - Shows target's currency.
                         .then(Commands.argument("target", EntityArgument.player())
@@ -88,7 +98,7 @@ public class CurrencyCommands {
                                 )
                         )
 
-                        // OP subcommand: /currency add <target> <amount> - Adds to a players currency.
+                        // OP subcommand: /currency add <target> <amount> - Adds to a players' currency.
                         .then(Commands.literal("add")
                                 .requires(source -> source.hasPermission(4))
                                 .then(Commands.argument("target",  EntityArgument.player())
@@ -134,6 +144,45 @@ public class CurrencyCommands {
         LOGGER.info("[{}] {} requested to see their {}!", LOGNAME, playerData.name, Config.currencyNamePlural);
 
         source.sendSuccess(() -> successMessage, false);
+        return 1;
+    }
+
+    public static int showPlayerRanks(CommandSourceStack source) {
+        if (!(source.getEntity() instanceof ServerPlayer)) {
+            source.sendFailure(Component.literal("You must be a player to use this command!"));
+            return 0;
+        }
+
+        List<PlayerData> playersData = PlayerDataHandler.loadAll();
+        playersData.sort(Comparator.comparing((PlayerData p) -> p.currency).reversed());
+
+        Component successMessage = Component.literal("[")
+                .append(Component.literal(Config.currencyNamePlural)
+                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                                .withBold(true)
+                        )
+                )
+                .append(Component.literal("]\n"));
+
+        int index = 1;
+        for (PlayerData playerData : playersData) {
+            successMessage = successMessage.copy()
+                    .append(Component.literal(index + ". "))
+                    .append(Component.literal(playerData.name)
+                            .withStyle(hexToTextColorStyle(Colours.playerName))
+                    )
+                    .append(Component.literal(" = "))
+                    .append(Component.literal(Config.currencySymbol + playerData.currency)
+                            .withStyle(hexToTextColorStyle(Colours.currencyName)
+                                    .withBold(true)
+                            )
+                    )
+                    .append(Component.literal("\n"));
+            index++;
+        }
+
+        source.sendSystemMessage(successMessage);
+
         return 1;
     }
 

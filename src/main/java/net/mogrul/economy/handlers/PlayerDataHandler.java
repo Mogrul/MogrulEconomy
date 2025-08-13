@@ -10,9 +10,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.mogrul.economy.MogrulEconomy.*;
 
@@ -64,6 +67,24 @@ public class PlayerDataHandler {
             );
             return null;
         }
+    }
+
+    public static List<PlayerData> loadAll() {
+        File[] files = MainDataHandler.playersFolder.toFile().listFiles((dir, name) -> name.endsWith(".json"));
+        List<PlayerData> playerDataList = new ArrayList<>();
+
+        if (files != null) {
+            for (File playerFile : files) {
+                try {
+                    String json = Files.readString(playerFile.toPath());
+                    playerDataList.add(GSON.fromJson(json, PlayerData.class));
+                } catch (IOException e) {
+                    LOGGER.error("[{}] Failed to load player [{}]! {}", LOGNAME, playerFile.getName(), e.getMessage());
+                }
+            }
+        }
+
+        return playerDataList;
     }
 
     public static void save(PlayerData playerData) {
