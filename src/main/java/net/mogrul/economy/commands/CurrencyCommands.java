@@ -249,7 +249,7 @@ public class CurrencyCommands {
             }
         }
 
-        PlayerData sourceData = MemoryData.players.get(targetPlayer.getStringUUID());
+        PlayerData sourceData = MemoryData.players.get(sourcePlayer.getStringUUID());
         if (amount > sourceData.currency) {
             Component notEnoughFailMessage = Component.literal("You don't have enough to send ")
                     .append(Component.literal(Config.currencySymbol + amount)
