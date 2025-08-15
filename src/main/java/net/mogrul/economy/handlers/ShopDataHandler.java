@@ -12,10 +12,11 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.level.Level;
 import net.mogrul.economy.data.MemoryData;
 import net.mogrul.economy.data.ShopData;
-import net.mogrul.economy.subs.ShopVillager;
+import net.mogrul.economy.goals.ShopVillagerGoal;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,8 +32,8 @@ import static net.mogrul.economy.handlers.MainDataHandler.shopsFolder;
 public class ShopDataHandler {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    @SubscribeEvent
-    public static void onServerStartedEvent(ServerStartedEvent event) {
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onServerStartingEvent(ServerStartingEvent event) {
         // Load all shop files into the memory data.
         try {
             List<Path> jsonFiles = getJsonFiles(shopsFolder);
@@ -44,7 +45,6 @@ public class ShopDataHandler {
 
                 // Store data object and spawn the entity.
                 MemoryData.shops.put(shopData.shopUUID, shopData);
-                createShopEntity(shopData);
             }
         } catch (IOException e) {
             LOGGER.error("[{}] Failed to load shop data to memory! {}", LOGNAME, e.getMessage());
@@ -92,13 +92,31 @@ public class ShopDataHandler {
 
         EntityType<Villager> villagerType = EntityType.VILLAGER;
         assert serverLevel != null;
-        ShopVillager shopVillager = new ShopVillager(villagerType, serverLevel);
+        Villager shopVillager = new Villager(villagerType, serverLevel);
 
         shopVillager.setPos(shopData.entityX, shopData.entityY, shopData.entityZ);
         shopVillager.setUUID(UUID.fromString(shopData.shopUUID));
         shopVillager.setCustomName(Component.literal(shopData.entityName));
+        shopVillager.getPersistentData().putBoolean(MODID, true);
+
+        shopVillager.goalSelector.removeAllGoals(g -> true);
+        shopVillager.targetSelector.removeAllGoals(g -> true);
+
+        shopVillager.goalSelector.addGoal(0, new ShopVillagerGoal(shopVillager));
 
         // Add the entity to the level.
         serverLevel.addFreshEntity(shopVillager);
+    }
+
+    public static void remove(ShopData shopData) {
+        Path shopFile = shopsFolder.resolve(shopData.shopUUID + ".json");
+
+        if (Files.notExists(shopFile)) return;
+        try {
+            Files.delete(shopFile);
+        } catch (IOException e) {
+            LOGGER.error("[{}] Failed to delete mobs file! {}", LOGNAME, e.getMessage());
+        }
+
     }
 }

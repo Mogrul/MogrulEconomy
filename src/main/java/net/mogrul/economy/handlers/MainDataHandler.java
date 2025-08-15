@@ -1,6 +1,7 @@
 package net.mogrul.economy.handlers;
 
 import net.minecraft.server.MinecraftServer;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
@@ -23,7 +24,7 @@ public class MainDataHandler {
     public static Path mobsFolder;
     public static Path shopsFolder;
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onServerStarting(ServerStartingEvent event) {
         MinecraftServer minecraftserver = event.getServer();
         Path serverRoot = minecraftserver.getServerDirectory();
