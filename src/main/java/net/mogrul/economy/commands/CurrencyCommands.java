@@ -29,7 +29,7 @@ public class CurrencyCommands {
         registerCommands(dispatcher);
     }
 
-    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+    private static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
         LOGGER.info("[{}] Registering currency commands!", LOGNAME);
 
         // Register base command
@@ -74,7 +74,7 @@ public class CurrencyCommands {
                         .then(Commands.literal("remove")
                                 .requires(source -> source.hasPermission(4))
                                 .then(Commands.argument("target",  EntityArgument.player())
-                                        .then(Commands.argument("amount", IntegerArgumentType.integer(1))
+                                        .then(Commands.argument("amount", IntegerArgumentType.integer(0))
                                                 .executes(context -> removeCurrency(
                                                         context.getSource(),
                                                         EntityArgument.getPlayer(context, "target"),
@@ -88,7 +88,7 @@ public class CurrencyCommands {
                         .then(Commands.literal("set")
                                 .requires(source -> source.hasPermission(4))
                                 .then(Commands.argument("target",  EntityArgument.player())
-                                        .then(Commands.argument("amount", IntegerArgumentType.integer(1))
+                                        .then(Commands.argument("amount", IntegerArgumentType.integer(0))
                                                 .executes(context -> setCurrency(
                                                         context.getSource(),
                                                         EntityArgument.getPlayer(context, "target"),
@@ -114,7 +114,7 @@ public class CurrencyCommands {
         );
     }
 
-    public static int showCurrency(CommandSourceStack source) {
+    private static int showCurrency(CommandSourceStack source) {
         // Check if is ServerPlayer
         if (!(source.getEntity() instanceof ServerPlayer serverPlayer)) {
             source.sendFailure(Component.literal("You must be a player to use this command!"));
@@ -124,19 +124,19 @@ public class CurrencyCommands {
         PlayerData playerData = MemoryData.players.get(serverPlayer.getStringUUID());
         Component successMessage = Component.literal("[")
                 .append(Component.literal(Config.currencyNamePlural)
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal("]\n"))
                 .append(Component.literal(playerData.name)
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" -> "))
                 .append(Component.literal(Config.currencySymbol + String.format("%,d", playerData.currency))
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 );
@@ -147,7 +147,7 @@ public class CurrencyCommands {
         return 1;
     }
 
-    public static int showPlayerRanks(CommandSourceStack source) {
+    private static int showPlayerRanks(CommandSourceStack source) {
         if (!(source.getEntity() instanceof ServerPlayer)) {
             source.sendFailure(Component.literal("You must be a player to use this command!"));
             return 0;
@@ -158,7 +158,7 @@ public class CurrencyCommands {
 
         Component successMessage = Component.literal("[")
                 .append(Component.literal(Config.currencyNamePlural)
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
@@ -166,14 +166,15 @@ public class CurrencyCommands {
 
         int index = 1;
         for (PlayerData playerData : playersData) {
+            if (index > 10) break;
             successMessage = successMessage.copy()
                     .append(Component.literal(index + ". "))
                     .append(Component.literal(playerData.name)
-                            .withStyle(hexToTextColorStyle(Colours.playerName))
+                            .withStyle(Colours.playerName)
                     )
                     .append(Component.literal(" = "))
                     .append(Component.literal(Config.currencySymbol + playerData.currency)
-                            .withStyle(hexToTextColorStyle(Colours.currencyName)
+                            .withStyle(Colours.currencyName
                                     .withBold(true)
                             )
                     )
@@ -186,7 +187,7 @@ public class CurrencyCommands {
         return 1;
     }
 
-    public static int showPlayerCurrency(CommandSourceStack source, ServerPlayer targetPlayer) {
+    private static int showPlayerCurrency(CommandSourceStack source, ServerPlayer targetPlayer) {
         if (!(source.getEntity() instanceof ServerPlayer sourcePlayer)) {
             source.sendFailure(Component.literal("You must be a player to use this command!"));
             return 0;
@@ -199,19 +200,19 @@ public class CurrencyCommands {
         PlayerData playerData = MemoryData.players.get(targetPlayer.getStringUUID());
         Component successMessage = Component.literal("[")
                         .append(Component.literal(Config.currencyNamePlural)
-                                .withStyle(hexToTextColorStyle(Colours.currencyName)
+                                .withStyle(Colours.currencyName
                                         .withBold(true)
                                 )
                         )
                         .append(Component.literal("]\n"))
                         .append(Component.literal(playerData.name)
-                                .withStyle(hexToTextColorStyle(Colours.playerName)
+                                .withStyle(Colours.playerName
                                         .withBold(true)
                                 )
                         )
                         .append(Component.literal(" -> "))
                         .append(Component.literal(Config.currencySymbol + String.format("%,d", playerData.currency))
-                                .withStyle(hexToTextColorStyle(Colours.currencyName)
+                                .withStyle(Colours.currencyName
                                         .withBold(true)
                                 )
                         );
@@ -228,7 +229,7 @@ public class CurrencyCommands {
         return 1;
     }
 
-    public static int sendCurrency(CommandSourceStack source, ServerPlayer targetPlayer, int amount) {
+    private static int sendCurrency(CommandSourceStack source, ServerPlayer targetPlayer, int amount) {
         if (!(source.getEntity() instanceof ServerPlayer sourcePlayer)) {
             source.sendFailure(Component.literal("You must be a player to use this command!"));
             return 0;
@@ -238,7 +239,7 @@ public class CurrencyCommands {
             if (sourcePlayer.getUUID().equals(targetPlayer.getUUID())) {
                 Component ownPlayerFailureMessage = Component.literal("You can't send ")
                         .append(Component.literal(Config.currencyNamePlural)
-                                .withStyle(hexToTextColorStyle(Colours.currencyName)
+                                .withStyle(Colours.currencyName
                                         .withBold(true)
                                 )
                         )
@@ -253,13 +254,13 @@ public class CurrencyCommands {
         if (amount > sourceData.currency) {
             Component notEnoughFailMessage = Component.literal("You don't have enough to send ")
                     .append(Component.literal(Config.currencySymbol + amount)
-                            .withStyle(hexToTextColorStyle(Colours.currencyName)
+                            .withStyle(Colours.currencyName
                                     .withBold(true)
                             )
                     )
                     .append(Component.literal(" you have "))
                     .append(Component.literal(Config.currencySymbol + String.format("%,d", sourceData.currency))
-                            .withStyle(hexToTextColorStyle(Colours.currencyName)
+                            .withStyle(Colours.currencyName
                                     .withBold(true)
                             )
                     );
@@ -279,24 +280,24 @@ public class CurrencyCommands {
 
         Component successMessage = Component.literal("[")
                 .append(Component.literal(Config.currencyNamePlural)
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal("]\n"))
                 .append(Component.literal(sourceData.name)
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" " + Config.currencySymbol + String.format("%,d", sourceData.currency))
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" -> "))
                 .append(Component.literal(targetMemoryData.name)
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 );
@@ -315,7 +316,7 @@ public class CurrencyCommands {
         return 1;
     }
 
-    public static int removeCurrency(CommandSourceStack source, ServerPlayer targetPlayer, int amount) {
+    private static int removeCurrency(CommandSourceStack source, ServerPlayer targetPlayer, int amount) {
         if (!(source.getEntity() instanceof ServerPlayer sourcePlayer)) {
             source.sendFailure(Component.literal("You must be a player to use this command!"));
             return 0;
@@ -327,24 +328,24 @@ public class CurrencyCommands {
 
         Component successMessage = Component.literal("[")
                 .append(Component.literal(Config.currencyNamePlural)
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal("]\n"))
                 .append(Component.literal(sourcePlayer.getName().getString())
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" x "))
                 .append(Component.literal(Config.currencySymbol + String.format("%,d", amount) + " ")
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(targetPlayer.getName().getString())
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 );
@@ -363,7 +364,7 @@ public class CurrencyCommands {
         return 1;
     }
 
-    public static int setCurrency(CommandSourceStack source, ServerPlayer targetPlayer, int amount) {
+    private static int setCurrency(CommandSourceStack source, ServerPlayer targetPlayer, int amount) {
         if (!(source.getEntity() instanceof ServerPlayer sourcePlayer)) {
             source.sendFailure(Component.literal("You must be a player to use this command!"));
             return 0;
@@ -375,24 +376,24 @@ public class CurrencyCommands {
 
         Component successMessage = Component.literal("[")
                 .append(Component.literal(Config.currencyNamePlural)
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                             .withBold(true)
                         )
                 )
                 .append(Component.literal("]\n"))
                 .append(Component.literal(sourcePlayer.getName().getString())
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" == "))
                 .append(Component.literal(Config.currencySymbol + String.format("%,d", targetData.currency) + " ")
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(targetPlayer.getName().getString())
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 );
@@ -411,7 +412,7 @@ public class CurrencyCommands {
         return 1;
     }
 
-    public static int addCurrency(CommandSourceStack source, ServerPlayer targetPlayer, int amount) {
+    private static int addCurrency(CommandSourceStack source, ServerPlayer targetPlayer, int amount) {
         if (!(source.getEntity() instanceof ServerPlayer sourcePlayer)) {
             source.sendFailure(Component.literal("You must be a player to use this command!"));
             return 0;
@@ -423,24 +424,24 @@ public class CurrencyCommands {
 
         Component successMessage = Component.literal("[")
                 .append(Component.literal(Config.currencyNamePlural)
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal("]\n"))
                 .append(Component.literal(sourcePlayer.getName().getString())
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" += "))
                 .append(Component.literal(Config.currencySymbol + String.format("%,d", targetData.currency) + " ")
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(targetPlayer.getName().getString())
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 );

@@ -40,7 +40,7 @@ public class TradeCommands {
         }
     }
 
-    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+    private static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
         LOGGER.info("[{}] Registering trade commands!", MODID);
 
         dispatcher.register(
@@ -93,7 +93,7 @@ public class TradeCommands {
         );
     }
 
-    public static int sendTradeRequest(CommandSourceStack source, Integer count, ServerPlayer toPlayer, Integer price) {
+    private static int sendTradeRequest(CommandSourceStack source, Integer count, ServerPlayer toPlayer, Integer price) {
         if (!(source.getEntity() instanceof ServerPlayer fromPlayer)) {
             source.sendFailure(Component.literal("Only players can use this command!"));
             return 0;
@@ -142,35 +142,35 @@ public class TradeCommands {
         // [ACCEPT] [REJECT]
         Component receiverMessage = Component.literal("")
                 .append(Component.literal("[TRADE REQUEST]\n")
-                    .withStyle(hexToTextColorStyle(Colours.currencyName)
+                    .withStyle(Colours.currencyName
                             .withBold(true)
                     )
                 )
                 .append(Component.literal("From: "))
                 .append(Component.literal(fromPlayer.getName().getString())
-                        .withStyle(hexToTextColorStyle(Colours.playerName)
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal("\nItems: "))
                 .append(Component.literal(String.format("%,d", count) + " ")
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 )
                 .append(stackCopy.getHoverName().copy()
-                        .withStyle(hexToTextColorStyle(Colours.mobName)
+                        .withStyle(Colours.mobName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal("\nPrice: ")
                 .append(Component.literal(Config.currencySymbol + String.format("%,d", price))
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(false)
                         )
                 )
                 .append(Component.literal("\n[ACCEPT] ")
-                        .withStyle(hexToTextColorStyle("#00FE05")
+                        .withStyle(Colours.success
                                 .withBold(true)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/accepttrade " + tradeUUID))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -179,7 +179,7 @@ public class TradeCommands {
                         )
                 )
                 .append(Component.literal(" [REJECT]")
-                        .withStyle(hexToTextColorStyle("#FE0301")
+                        .withStyle(Colours.failure
                                 .withBold(true)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/rejecttrade " + tradeUUID))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -189,34 +189,34 @@ public class TradeCommands {
                 ));
 
         Component senderMessage = Component.literal("[TRADE REQUEST SENT]\n")
-                .withStyle(hexToTextColorStyle("#C6F601")
+                .withStyle(Colours.success
                         .withBold(true)
                 )
                 .append(Component.literal("To: "))
                 .append(Component.literal(toPlayer.getDisplayName().getString())
-                        .withStyle(hexToTextColorStyle("#FB7100")
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal("\nItems: "))
                 .append(Component.literal(String.format("%,d", count) + " ")
-                        .withStyle(hexToTextColorStyle("#A8FF01")
+                        .withStyle(Colours.itemName
                                 .withBold(false)
                         )
                 )
                 .append(stackCopy.getHoverName().copy()
-                        .withStyle(hexToTextColorStyle("#A8FF01")
+                        .withStyle(Colours.itemName
                                 .withBold(false)
                         )
                 )
                 .append(Component.literal("\nPrice: "))
                 .append(Component.literal(Config.currencySymbol + String.format("%,d", price))
-                        .withStyle(hexToTextColorStyle("#FFDA00")
+                        .withStyle(Colours.currencyName
                                 .withBold(false)
                         )
                 )
                 .append(Component.literal("\n[CANCEL]")
-                        .withStyle(hexToTextColorStyle("#FE0301")
+                        .withStyle(Colours.failure
                                 .withBold(true)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/canceltrade " + tradeUUID))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
@@ -242,7 +242,7 @@ public class TradeCommands {
         return 1;
     }
 
-    public static int acceptTrade(CommandSourceStack source, String tradeUUID) {
+    private static int acceptTrade(CommandSourceStack source, String tradeUUID) {
         ServerPlayer toPlayer = source.getPlayer();
 
         PendingTradeData pendingTradeData = pendingTrades.get(tradeUUID);
@@ -267,7 +267,7 @@ public class TradeCommands {
             source.sendFailure(Component.literal("You can't afford this trade!"));
             pendingTradeData.fromPlayer.sendSystemMessage(Component.literal("")
                     .append(Component.literal(toPlayer.getName().getString())
-                            .withStyle(hexToTextColorStyle("#FE0301")
+                            .withStyle(Colours.playerName
                                     .withBold(true)
                             )
                     )
@@ -301,38 +301,38 @@ public class TradeCommands {
 
         Component accepterMessage = Component.literal("Accepted trade of ")
                 .append(Component.literal(String.format("%,d", pendingTradeData.count) + " " + pendingTradeData.items.getHoverName().getString())
-                        .withStyle(hexToTextColorStyle("#A8FF01")
+                        .withStyle(Colours.itemName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" from "))
                 .append(Component.literal(fromPlayerData.name)
-                        .withStyle(hexToTextColorStyle("#FB7100")
+                        .withStyle(Colours.playerName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" for "))
                 .append(Component.literal(Config.currencySymbol + String.format("%,d", pendingTradeData.price))
-                        .withStyle(hexToTextColorStyle("#FFDA00")
+                        .withStyle(Colours.currencyName
                                 .withBold(false)
                         )
                 );
 
         Component sellerMessage = Component.literal("")
                 .append(Component.literal(toPlayerData.name)
-                    .withStyle(hexToTextColorStyle("#FB7100")
+                    .withStyle(Colours.playerName
                             .withBold(true)
                     )
                 )
                 .append(Component.literal(" accepted your trade of "))
                 .append(Component.literal(String.format("%,d", pendingTradeData.count) + " " + pendingTradeData.items.getHoverName().getString())
-                        .withStyle(hexToTextColorStyle("#A8FF01")
+                        .withStyle(Colours.itemName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" for "))
                 .append(Component.literal(Config.currencySymbol + String.format("%,d", pendingTradeData.price))
-                        .withStyle(hexToTextColorStyle("#FFDA00")
+                        .withStyle(Colours.currencyName
                                 .withBold(false)
                         )
                 );
@@ -344,7 +344,7 @@ public class TradeCommands {
         return 1;
     }
 
-    public static int rejectTrade(CommandSourceStack source, String tradeUUID) {
+    private static int rejectTrade(CommandSourceStack source, String tradeUUID) {
         ServerPlayer toPlayer = source.getPlayer();
 
         PendingTradeData pendingTradeData = pendingTrades.remove(tradeUUID);
@@ -402,12 +402,12 @@ public class TradeCommands {
 
         Component sourceMessage = Component.literal("Trade request to ")
                 .append(Component.literal(pendingTradeData.toPlayer.getGameProfile().getName())
-                        .withStyle(hexToTextColorStyle("#FB7100")
+                        .withStyle(Colours.playerName
                                 .withBold(false)
                         )
                 )
                 .append(Component.literal(" cancelled")
-                        .withStyle(hexToTextColorStyle("#FE0301")
+                        .withStyle(Colours.failure
                                 .withBold(true)
                         )
                 );

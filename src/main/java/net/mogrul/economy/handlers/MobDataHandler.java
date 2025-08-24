@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static net.mogrul.economy.MogrulEconomy.*;
+import static net.mogrul.economy.handlers.MainDataHandler.getJsonFiles;
 import static net.mogrul.economy.handlers.MainDataHandler.mobsFolder;
 
 @EventBusSubscriber(modid = MODID)
@@ -42,23 +43,6 @@ public class MobDataHandler {
         }
     }
 
-    public static MobRewardData load(String mobID) {
-        LOGGER.info("[{}] Loading mobs file!", LOGNAME);
-        Path mobsFile = mobsFolder.resolve(mobID.replace(":", "_") + ".json");
-
-        if (Files.notExists(mobsFile)) {
-            return null;
-        }
-
-        try {
-            String json = Files.readString(mobsFile);
-            return GSON.fromJson(json, MobRewardData.class);
-        } catch (IOException e) {
-            LOGGER.error("[{}] Failed to load mob {} file! {}", LOGNAME, mobID, e.getMessage());
-            return null;
-        }
-    }
-
     public static void save(MobRewardData mobRewardData) {
         Path mobsFile = mobsFolder.resolve(mobRewardData.mobID.replace(":", "_") + ".json");
 
@@ -78,14 +62,6 @@ public class MobDataHandler {
             Files.delete(mobsFile);
         } catch (IOException e) {
             LOGGER.error("[{}] Failed to delete mobs file! {}", LOGNAME, e.getMessage());
-        }
-    }
-
-    public static List<Path> getJsonFiles(Path directory) throws IOException {
-        try (Stream<Path> paths = Files.walk(directory)) {
-            return paths
-                    .filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".json"))
-                    .toList();
         }
     }
 }

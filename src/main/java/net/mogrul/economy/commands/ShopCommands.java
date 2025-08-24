@@ -44,7 +44,7 @@ public class ShopCommands {
         }
     }
 
-    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+    private static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
         LOGGER.info("[{}] Registering shop commands!", LOGNAME);
 
         dispatcher.register(
@@ -81,7 +81,7 @@ public class ShopCommands {
         );
     }
 
-    public static int createShop(CommandSourceStack source, String entityName, ResourceLocation sellingItem, int amountPerTrade, int pricePerTrade) {
+    private static int createShop(CommandSourceStack source, String entityName, ResourceLocation sellingItem, int amountPerTrade, int pricePerTrade) {
         if (!(source.getEntity() instanceof ServerPlayer sourcePlayer)) {
             source.sendFailure(Component.literal("Only players can issue this command!"));
             return 0;
@@ -125,7 +125,7 @@ public class ShopCommands {
         return 1;
     }
 
-    public static int removeShop(CommandSourceStack source) {
+    private static int removeShop(CommandSourceStack source) {
         if (!(source.getEntity() instanceof ServerPlayer sourcePlayer)) {
             source.sendFailure(Component.literal("Only players can issue this command!"));
             return 0;

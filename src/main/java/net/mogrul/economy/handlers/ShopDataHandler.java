@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static net.mogrul.economy.MogrulEconomy.*;
+import static net.mogrul.economy.handlers.MainDataHandler.getJsonFiles;
 import static net.mogrul.economy.handlers.MainDataHandler.shopsFolder;
 
 @EventBusSubscriber(modid = MODID)
@@ -72,14 +73,6 @@ public class ShopDataHandler {
             Files.writeString(shopsFile, json);
         } catch (IOException e) {
             LOGGER.error("[{}] Failed to save shop data! {}", LOGNAME, e.getMessage());
-        }
-    }
-
-    public static List<Path> getJsonFiles(Path directory) throws IOException {
-        try (Stream<Path> paths = Files.walk(directory)) {
-            return paths
-                    .filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".json"))
-                    .toList();
         }
     }
 

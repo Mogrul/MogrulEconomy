@@ -32,7 +32,7 @@ public class MobRewardCommands {
         }
     }
 
-    public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
+    private static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
         LOGGER.info("[{}] Registering mob rewards commands!", LOGNAME);
 
         dispatcher.register(
@@ -70,7 +70,7 @@ public class MobRewardCommands {
         if (!BuiltInRegistries.ENTITY_TYPE.containsKey(mob)) {
             Component unknownMobFailMessage = Component.literal("Unknown mob type: ")
                     .append(Component.literal(mob.toString())
-                            .withStyle(hexToTextColorStyle(Colours.mobName)
+                            .withStyle(Colours.mobName
                                     .withBold(true)
                             )
                     );
@@ -90,13 +90,13 @@ public class MobRewardCommands {
 
             Component mobUpdatedSuccessMessage = Component.literal("")
                     .append(Component.literal(mob.toString())
-                            .withStyle(hexToTextColorStyle(Colours.mobName)
+                            .withStyle(Colours.mobName
                                     .withBold(true)
                             )
                     )
                     .append(Component.literal(" has been updated to "))
                     .append(Component.literal(Config.currencySymbol + String.format("%,d", amount))
-                            .withStyle(hexToTextColorStyle(Colours.currencyName)
+                            .withStyle(Colours.currencyName
                                     .withBold(true)
                             )
                     );
@@ -112,13 +112,13 @@ public class MobRewardCommands {
 
         Component rewardSetSuccessMessage = Component.literal("")
                 .append(Component.literal(mobString)
-                        .withStyle(hexToTextColorStyle(Colours.mobName)
+                        .withStyle(Colours.mobName
                                 .withBold(true)
                         )
                 )
                 .append(Component.literal(" reward has been set to "))
                 .append(Component.literal(Config.currencySymbol + amount)
-                        .withStyle(hexToTextColorStyle(Colours.currencyName)
+                        .withStyle(Colours.currencyName
                                 .withBold(true)
                         )
                 );
@@ -139,7 +139,7 @@ public class MobRewardCommands {
         if (!BuiltInRegistries.ENTITY_TYPE.containsKey(mob)) {
             Component unknownMobFailMessage = Component.literal("Unknown mob type: ")
                     .append(Component.literal(mob.toString())
-                            .withStyle(hexToTextColorStyle(Colours.mobName)
+                            .withStyle(Colours.mobName
                                     .withBold(true)
                             )
                     );
@@ -154,7 +154,7 @@ public class MobRewardCommands {
         if (mobRewardData == null) {
             Component mobNotExistFailMessage = Component.literal("")
                     .append(Component.literal(mob.toString())
-                            .withStyle(hexToTextColorStyle(Colours.mobName)
+                            .withStyle(Colours.mobName
                                     .withBold(true)
                             )
                     )
@@ -169,7 +169,7 @@ public class MobRewardCommands {
 
         Component successMessage = Component.literal("")
                 .append(Component.literal(mob.toString())
-                        .withStyle(hexToTextColorStyle(Colours.mobName)
+                        .withStyle(Colours.mobName
                                 .withBold(true)
                         )
                 )

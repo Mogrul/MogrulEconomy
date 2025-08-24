@@ -30,9 +30,8 @@ import net.neoforged.neoforge.common.NeoForge;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.UUID;
 
-import static net.mogrul.economy.builders.ConfigBuilder.COMMON_CONFIG;
+import static net.mogrul.economy.Config.COMMON_CONFIG;
 
 @Mod(MogrulEconomy.MODID)
 public class MogrulEconomy {
@@ -50,17 +49,6 @@ public class MogrulEconomy {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         server = event.getServer();
-    }
-
-    public static Style hexToTextColorStyle(String hex) {
-        // Remove the '#' character if it exists
-        if (hex.startsWith("#")) {
-            hex = hex.substring(1);
-        }
-
-        // Parse the hex string into an RGB integer
-        int rgb = Integer.parseInt(hex, 16);
-        return Style.EMPTY.withColor(TextColor.fromRgb(rgb));
     }
 
     @SubscribeEvent
@@ -97,13 +85,13 @@ public class MogrulEconomy {
 
             Component mobRewardSuccessMessage = Component.literal("[Mob Rewards]\n")
                     .append(Component.literal(mobString)
-                            .withStyle(hexToTextColorStyle(Colours.mobName)
+                            .withStyle(Colours.mobName
                                     .withBold(true)
                             )
                     )
                     .append(Component.literal(" -> "))
                     .append(Component.literal(Config.currencySymbol + mobRewardData.rewardAmount)
-                            .withStyle(hexToTextColorStyle(Colours.currencyName)
+                            .withStyle(Colours.currencyName
                                     .withBold(true)
                             )
                     );
