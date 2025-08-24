@@ -2,8 +2,6 @@ package net.mogrul.economy.handlers;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityEvent;
 import net.mogrul.economy.Colours;
 import net.mogrul.economy.Config;
 import net.mogrul.economy.data.BountyData;

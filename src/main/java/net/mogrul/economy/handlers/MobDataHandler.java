@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static net.mogrul.economy.MogrulEconomy.*;
 import static net.mogrul.economy.handlers.MainDataHandler.getJsonFiles;
