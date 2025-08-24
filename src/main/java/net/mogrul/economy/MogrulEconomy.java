@@ -13,9 +13,11 @@ import net.minecraft.world.item.ItemStack;
 import net.mogrul.economy.commands.TradeCommands;
 import net.mogrul.economy.data.*;
 import net.mogrul.economy.handlers.PlayerDataHandler;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -40,6 +42,11 @@ public class MogrulEconomy {
     public static MinecraftServer server;
 
     public MogrulEconomy(ModContainer modContainer) {
+        // Disable loading mod on client side.
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            return;
+        }
+
         NeoForge.EVENT_BUS.register(this);
         modContainer.registerConfig(ModConfig.Type.COMMON, COMMON_CONFIG);
     }
